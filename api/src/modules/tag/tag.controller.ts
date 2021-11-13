@@ -1,22 +1,45 @@
-import { Body, Controller, Delete, Get, NotFoundException, Param, Post, Put } from '@nestjs/common';
-import { ApiExtraModels, ApiTags, ApiUnauthorizedResponse } from '@nestjs/swagger';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  NotFoundException,
+  Param,
+  Post,
+  Put,
+} from '@nestjs/common';
+import {
+  ApiExtraModels,
+  ApiTags,
+  ApiUnauthorizedResponse,
+} from '@nestjs/swagger';
 import { ApiErrorResponse, ApiSuccessResponse } from 'src/common/decoraters';
-import { CommonResponse, CreatedResponse, NotFoundResponse, OkResponse, UnAuthorizedResponse } from 'src/common/types/response';
+import {
+  CommonResponse,
+  CreatedResponse,
+  NotFoundResponse,
+  OkResponse,
+  UnAuthorizedResponse,
+} from 'src/common/types/response';
 import { TagRepository } from 'src/ripositories/tag.repository';
 import { DeleteResult } from 'typeorm';
+import { createTagRequestDto } from './dto/create-tag.request.dto';
+import { TagResponseDto } from './dto/tag.response.dto';
+import { TagsResponseDto } from './dto/tags.response.dto';
+import { updateTagRequestDto } from './dto/update-tag.request.dto';
 import { TagService } from './tag.service';
 
 @ApiTags('tags')
 @Controller('tags')
 @ApiExtraModels(ApiUnauthorizedResponse, NotFoundException)
 @ApiErrorResponse(UnAuthorizedResponse)
-@ApiErrorResponse(NotFoundResponse)  
+@ApiErrorResponse(NotFoundResponse)
 export class TagController {
-  constructor(private readonly _tagService) {}
-  
+  constructor(private readonly _tagService: TagService) {}
+
   @Post()
-  async createTag(@Body() param) {
-    let responseData;
+  async createTag(@Body() param: createTagRequestDto) {
+    let responseData: TagResponseDto;
 
     responseData = await this._tagService.createTag(param);
 
@@ -25,7 +48,7 @@ export class TagController {
 
   @Get()
   async getTags() {
-    let responseData;
+    let responseData: TagsResponseDto;
 
     responseData = await this._tagService.getTags();
 
@@ -33,8 +56,8 @@ export class TagController {
   }
 
   @Get(':tagId')
-  async getTag(@Param('tagId') tagId) {
-    let responseData;
+  async getTag(@Param('tagId') tagId: number) {
+    let responseData: TagResponseDto;
 
     responseData = await this._tagService.findTag(tagId);
 
@@ -43,10 +66,10 @@ export class TagController {
 
   @Put(':tagId')
   async updateTag(
-    @Param('tagId') tagId,
-    @Body() param
+    @Param('tagId') tagId: number,
+    @Body() param: updateTagRequestDto,
   ) {
-    let responseData;
+    let responseData: TagResponseDto;
 
     responseData = await this._tagService.updateTag(tagId, param);
 
@@ -54,8 +77,8 @@ export class TagController {
   }
 
   @Delete(':tagId')
-  async deleteTag(@Param('tagId') tagId) {
-    let responseData;
+  async deleteTag(@Param('tagId') tagId: number) {
+    let responseData: DeleteResult;
 
     responseData = await this._tagService.deleteTag(tagId);
 
